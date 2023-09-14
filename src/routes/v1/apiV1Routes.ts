@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./authRoutes";
 import userRoutes from "./userRoutes";
 import uploadRoutes from "./uploadRoutes";
+import projectRoutes from "./projectRoutes";
 
 
 
@@ -11,5 +12,6 @@ const router = express.Router();
 router.use("/auth", authRoutes);
 router.use("/user", userRoutes);
 router.use("/upload", uploadRoutes);
+router.use("/project", projectRoutes);
 
 export default router;

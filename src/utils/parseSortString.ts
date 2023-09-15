@@ -25,6 +25,6 @@ export default (sortString: string, defaultSort: string) => {
     const [key, value] = defaultSort.split(";");
     sortObject[key] = value === "1" ? 1 : -1;
   }
-
+  // console.log(sortObject);
   return sortObject;
 };

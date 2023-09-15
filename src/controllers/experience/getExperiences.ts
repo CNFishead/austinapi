@@ -2,14 +2,13 @@ import { Response } from "express";
 import asyncHandler from "../../middleware/asyncHandler";
 import { AuthenticatedRequest } from "../../types/AuthenticatedRequest";
 import error from "../../middleware/error";
-import Project from "../../models/Project";
+import Experience from "../../models/Experience";
 import parseFilterOptions from "../../utils/parseFilterOptions";
 import parseQueryKeywords from "../../utils/parseQueryKeywords";
 import parseSortString from "../../utils/parseSortString";
-
 /**
- * @description Get all projects, supports pagination and advanced filtering
- * @route GET /api/v1/projects
+ * @description Get all work expeiences, supports pagination and advanced filtering
+ * @route GET /api/v1/expereince
  *
  * @author Austin Howard
  * @version 1.0
@@ -19,7 +18,7 @@ import parseSortString from "../../utils/parseSortString";
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response, next: any) => {
   try {
     const { pageNumber = 1, limit = 10 } = req.query as any;
-    const projects = await Project.aggregate([
+    const data = await Experience.aggregate([
       {
         $match: {
           $and: [{ ...parseFilterOptions(req.query?.filterOptions) }],
@@ -41,7 +40,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
 
     return res.status(200).json({
       success: true,
-      projects,
+      data,
     });
   } catch (err) {
     console.log(err);

@@ -2,7 +2,7 @@ import { Response } from "express";
 import asyncHandler from "../../middleware/asyncHandler";
 import { AuthenticatedRequest } from "../../types/AuthenticatedRequest";
 import error from "../../middleware/error";
-import Project from "../../models/Project";
+import Blog from "../../models/Blog";
 import parseFilterOptions from "../../utils/parseFilterOptions";
 import parseQueryKeywords from "../../utils/parseQueryKeywords";
 import parseSortString from "../../utils/parseSortString";
@@ -19,11 +19,11 @@ import parseSortString from "../../utils/parseSortString";
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response, next: any) => {
   try {
     const { pageNumber = 1, limit = 10 } = req.query as any;
-    const projects = await Project.aggregate([
+    const blogs = await Blog.aggregate([
       {
         $match: {
           $and: [{ ...parseFilterOptions(req.query?.filterOptions) }],
-          $or: [...parseQueryKeywords(["name", "slug", "description"], req.query?.keyword)],
+          $or: [...parseQueryKeywords(["blogTitle", "slug", "description"], req.query?.keyword)],
         },
       },
       {
@@ -41,7 +41,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
 
     return res.status(200).json({
       success: true,
-      projects,
+      blogs,
     });
   } catch (err) {
     console.log(err);

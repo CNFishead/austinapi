@@ -23,13 +23,9 @@ export default asyncHandler(async (req: Request, res: Response) => {
     if (!email || !password) {
       return res.status(400).json({ message: "Please enter a email and password", success: false });
     }
-
     //This checks if user isActive
     const user = await User.findOne({
-      $or: [
-        { username: email.trim().toLowerCase(), isActive: true },
-        { email: email.trim().toLowerCase(), isActive: true },
-      ],
+      $or: [{ username: email.trim().toLowerCase() }, { email: email.trim().toLowerCase() }],
     }).select("+password");
 
     if (!user) {

@@ -18,49 +18,7 @@ export default async (id: any) => {
           _id: id,
         },
       },
-      // use the id of the user to find the ministry that the user is a leader of
-      {
-        $lookup: {
-          from: "ministries",
-          localField: "_id",
-          foreignField: "leader",
-          as: "ministry",
-          pipeline: [
-            {
-              $lookup:{
-                from: "users",
-                localField: "leader",
-                foreignField: "_id",
-                as: "leader",
-              }
-            },
-            {
-              $unwind: {
-                path: "$leader",
-                preserveNullAndEmptyArrays: true,
-            }
-            },
-          ],
-        },
-      },
-      {
-        $unwind: {
-          path: "$ministry",
-          preserveNullAndEmptyArrays: true,
-        }
-      },
-      {
-        $project: {
-          firstName: 1,
-          lastName: 1,
-          email: 1,
-          ministry: 1,
-          role:1,
-          profileImageUrl: 1,
-        },
-      }
     ]);
-    console.log(user[0])
     if (!user[0]) {
       throw new Error("User not found");
     }

@@ -27,6 +27,9 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
         },
       },
       {
+        $setWindowFields: { output: { totalCount: { $count: {} } } },
+      },
+      {
         $sort: {
           ...parseSortString(req.query?.sortOptions, "createdAt;-1"),
         },
@@ -42,6 +45,15 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
     return res.status(200).json({
       success: true,
       blogs,
+      pageNumber,
+      // for total number of pages we have a value called totalCount in the output field of the setWindowFields stage
+      // we need to target one document in the output array, so we use the 0 index, and then access the totalCount property
+      // if we don't have a totalCount, we return 0
+      pages: Math.ceil(blogs.length > 0 ? blogs[0].totalCount / limit : 0),
+      totalCount: blogs.length > 0 ? blogs[0].totalCount : 0,
+      // pages: Math.ceil(count / pageSize),
+      prevPage: pageNumber - 1,
+      nextPage: pageNumber + 1,
     });
   } catch (err) {
     console.log(err);

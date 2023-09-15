@@ -36,13 +36,12 @@ const PORT = Number(process.env.PORT) || 5000;
 // cronJobs();
 
 if (process.env.NODE_ENV === "development") {
+  console.log(`Running morgan in ${process.env.NODE_ENV} mode`.yellow);
   app.use(morgan("dev"));
 }
 
 // using this allows us to accept body data
-app.use(express.json({ 
-
-}));
+app.use(express.json({}));
 app.use(fileUpload());
 
 // This is to help with CORS issues, we dont want to allow anyone but a select group to access routes
@@ -66,14 +65,11 @@ app.use(errorHandler);
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("API is running... Shepherds of Christ Ministries");
+  res.send("API is running... Howard's API V 0.0.3");
 });
 
-
 const server = app.listen(PORT, () =>
-  console.log(
-    `Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
-  )
+  console.log(`Server running in ${process.env.NODE_ENV} mode, on port ${PORT}`.yellow.bold)
 );
 
 const io = new Server(server, {

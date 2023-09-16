@@ -17,12 +17,15 @@ import parseSortString from "../../utils/parseSortString";
  */
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response, next: any) => {
   try {
+    console.log(parseFilterOptions(req.query?.filterOptions))
     const { pageNumber = 1, limit = 10 } = req.query as any;
     const data = await Experience.aggregate([
       {
         $match: {
-          $and: [{ ...parseFilterOptions(req.query?.filterOptions) }],
-          $or: [...parseQueryKeywords(["name", "slug", "description"], req.query?.keyword)],
+          $and: [
+            { ...parseFilterOptions(req.query?.filterOptions) },
+            { $or: [...parseQueryKeywords(["name", "slug", "description"], req.query?.keyword)] },
+          ],
         },
       },
       {
@@ -40,6 +43,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
         $limit: Number(limit),
       },
     ]);
+    console.log(data);
 
     return res.status(200).json({
       success: true,

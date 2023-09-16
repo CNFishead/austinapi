@@ -5,6 +5,7 @@ import uploadRoutes from "./uploadRoutes";
 import projectRoutes from "./projectRoutes";
 import blogRoutes from "./blogRoutes";
 import experienceRoutes from "./experienceRoutes";
+import utilRoutes from "./utilRoutes";
 
 const router = express.Router();
 
@@ -15,5 +16,6 @@ router.use("/upload", uploadRoutes);
 router.use("/project", projectRoutes);
 router.use("/blog", blogRoutes);
 router.use("/experience", experienceRoutes);
+router.use("/util", utilRoutes);
 
 export default router;

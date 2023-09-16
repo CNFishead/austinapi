@@ -17,6 +17,10 @@ const ExperienceSchema = new mongoose.Schema(
     startDate: {
       type: Date,
     },
+    isHidden: {
+      type: Boolean,
+      default: false,
+    },
     endDate: {
       type: Date,
     },

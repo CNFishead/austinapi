@@ -65,7 +65,7 @@ app.use(errorHandler);
 app.use(express.static(path.join(__dirname, "../public")));
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("API is running... Howard's API V 0.0.3");
+  res.send("API is running... Howard's API V 0.0.4");
 });
 
 const server = app.listen(PORT, () =>

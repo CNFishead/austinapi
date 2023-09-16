@@ -12,6 +12,6 @@ router.route("/").get(getExperiences);
 
 router.use(protect()); // protect all routes below this line
 router.route("/").post(createExperience);
-router.route("/:blogId").get(getExperience).put(updateExperience).delete(deleteExperience);
+router.route("/:id").get(getExperience).put(updateExperience).delete(deleteExperience);
 
 export default router;

@@ -3,6 +3,7 @@ export default interface ProjectType {
   name: string;
   slug: string;
   photo: string;
+  isFeatured: boolean;
   githubUrl: string;
   languages: string[];
   description: string;

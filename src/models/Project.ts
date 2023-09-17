@@ -20,6 +20,10 @@ const ProjectSchema = new mongoose.Schema(
     githubUrl: {
       type: String,
     },
+    isFeatured: {
+      type: Boolean,
+      default: false,
+    },
     languages: {
       // Array of Strings
       type: [String],

@@ -32,7 +32,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
       },
       {
         $sort: {
-          ...parseSortString(req.query?.sortOptions, "createdAt;-1"),
+          ...parseSortString(req.query?.sortBy, "createdAt;-1"),
         },
       },
       {

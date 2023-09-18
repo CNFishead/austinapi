@@ -11,10 +11,13 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
       api_key: process.env.CLOUDINARY_API_KEY,
       api_secret: process.env.CLOUDINARY_API_SECRET,
     });
-
+    // ping
+    const ping = await cloudinary.api.ping();
+    if (ping.status !== "ok") return res.status(500).json({ success: false, message: "Cloudinary API is not responding" });
     // get all images from cloudinary
     const images = await cloudinary.api.resources({
-      next_cursor: req.query?.next_cursor,
+      next_cursor: req.query?.nextCursor,
+      max_results: 5,
     });
 
     return res.status(200).json({

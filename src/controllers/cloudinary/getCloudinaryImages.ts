@@ -17,7 +17,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
     // get all images from cloudinary
     const images = await cloudinary.api.resources({
       next_cursor: req.query?.nextCursor,
-      max_results: 5,
+      max_results: req.query?.maxResults,
     });
 
     return res.status(200).json({

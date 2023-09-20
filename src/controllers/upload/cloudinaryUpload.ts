@@ -46,9 +46,9 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
 
     // ***NOTE*** Path.parse() returns a {}, youll need to .name to access {name: String} for slugify
     const fileName = path.parse(file.name);
-
+    console.log(`here`);
     // move file to the public images folder
-    file.mv(`public/images/${file.name}`, async (err: any) => {
+    await file.mv(`public/images/${file.name}`, async (err: any) => {
       if (err) {
         return res.status(500).json({ message: `Problem with file being moved to filesystem` });
       }
@@ -63,9 +63,9 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
       // quality, drop the quality of the image to 75%
       quality: 75,
     });
-
+    console.log(uploadedResponse);
     // remove the image from the filesystem
-    // await fs.unlinkSync(`public/images/${file.name}`);
+    await fs.unlinkSync(`public/images/${file.name}`);
     // console.log(uploadedResponse);
 
     return res.json({ imageUrl: uploadedResponse.secure_url, message: `Image Uploaded successfully`, filename: file.name });

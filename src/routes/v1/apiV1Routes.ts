@@ -6,11 +6,13 @@ import projectRoutes from "./projectRoutes";
 import blogRoutes from "./blogRoutes";
 import experienceRoutes from "./experienceRoutes";
 import utilRoutes from "./utilRoutes";
+import cloudinaryRoutes from "./cloudinaryRoutes";
 
 const router = express.Router();
 
 // Import all of our routes
 router.use("/auth", authRoutes);
+router.use("/cloudinary", cloudinaryRoutes);
 router.use("/user", userRoutes);
 router.use("/upload", uploadRoutes);
 router.use("/project", projectRoutes);

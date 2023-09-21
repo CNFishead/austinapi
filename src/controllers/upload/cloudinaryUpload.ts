@@ -5,6 +5,8 @@ import path from "path";
 import fs from "fs";
 import { AuthenticatedRequest } from "../../types/AuthenticatedRequest";
 import { Response } from "express";
+import streamifier from "streamifier";
+import formatBytes from "../../utils/formatBytes";
 
 /**
  * @description: This function will upload to cloudinary a photo
@@ -31,44 +33,50 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
     if (!req.files) {
       return res.status(400).json({ message: `Please upload a file` });
     }
-
     const file = req.files.file;
     // make sure image is a photo
     if (!file.mimetype.startsWith("image")) {
       return res.status(400).json({ message: `Please make sure to upload an image` });
     }
-    // Check file size
     if (file.size > process.env.MAX_FILE_UPLOAD!) {
       return res.status(400).json({
-        message: `File was too large, please upload an image less than ${process.env.MAX_FILE_UPLOAD} or 10MB in size`,
+        message: `File was too large size: ${formatBytes(file.size)}, please upload an image less than ${
+          process.env.MAX_FILE_UPLOAD
+        } or 10MB in size`,
       });
     }
+    const fileName = path.parse(file.name.toString());
 
-    // ***NOTE*** Path.parse() returns a {}, youll need to .name to access {name: String} for slugify
-    const fileName = path.parse(file.name);
-    console.log(`here`);
-    // move file to the public images folder
-    await file.mv(`public/images/${file.name}`, async (err: any) => {
-      if (err) {
-        return res.status(500).json({ message: `Problem with file being moved to filesystem` });
+    // convert the file.data to buffer and create a readstream
+    const buffer = Buffer.from(file.data);
+
+    // create a readstream that sends the buffer to cloudinary
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "portfolio", public_id: fileName.name, overwrite: true, resource_type: "image", format: "webp", quality: 75 },
+      (err, result) => {
+        if (err) {
+          console.log(err);
+          return res.status(400).json({ message: `Error uploading file` });
+        }
+        return res.json({ imageUrl: result?.secure_url, message: `Image Uploaded successfully`, filename: file.name });
       }
-    });
+    );
 
-    const uploadedResponse = await cloudinary.uploader.upload(`public/images/${file.name}`, {
-      folder: "portfolio",
-      public_id: fileName.name,
-      overwrite: true,
-      resource_type: "image",
-      format: "webp",
-      // quality, drop the quality of the image to 75%
-      quality: 75,
-    });
-    console.log(uploadedResponse);
-    // remove the image from the filesystem
-    await fs.unlinkSync(`public/images/${file.name}`);
-    // console.log(uploadedResponse);
+    // pipe the buffer to the readstream
+    const response = await streamifier.createReadStream(buffer).pipe(stream);
+    // console.log(response);
 
-    return res.json({ imageUrl: uploadedResponse.secure_url, message: `Image Uploaded successfully`, filename: file.name });
+    // const uploadedResponse = await cloudinary.uploader.upload(file.data, {
+    //   folder: "portfolio",
+    //   public_id: fileName.name,
+    //   overwrite: true,
+    //   resource_type: "image",
+    //   format: "webp",
+    //   // quality, drop the quality of the image to 75%
+    //   quality: 75,
+    // });
+
+    // return res.json({ imageUrl: `uploadedResponse.secure_url`, message: `Image Uploaded successfully`, filename: file.name });
   } catch (err) {
     console.log(err);
     error(err, req, res, next);

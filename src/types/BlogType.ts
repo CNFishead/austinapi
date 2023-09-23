@@ -3,6 +3,7 @@ export default interface BlogType {
   blogTitle: string;
   content: string;
   isFeatured: boolean;
+  isPrivate: boolean;
   blogImageUrl: string;
   description: string;
   slug: string;

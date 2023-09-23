@@ -7,6 +7,7 @@ import parseFilterOptions from "../../utils/parseFilterOptions";
 import parseQueryKeywords from "../../utils/parseQueryKeywords";
 import parseSortString from "../../utils/parseSortString";
 import Experience from "../../models/Experience";
+import Certificate from "../../models/Certificate";
 
 /**
  * @description Get all projects, supports pagination and advanced filtering
@@ -20,7 +21,7 @@ import Experience from "../../models/Experience";
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response, next: any) => {
   try {
     const { pageNumber = 1, limit = 10 } = req.query as any;
-    const certificates = await Experience.aggregate([
+    const certificates = await Certificate.aggregate([
       {
         $match: {
           $and: [{ ...parseFilterOptions(req.query?.filterOptions) }],
@@ -32,7 +33,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
       },
       {
         $sort: {
-          ...parseSortString(req.query?.sortBy, "createdAt;-1"),
+          ...parseSortString(req.query?.sortBy, "dateOfCompletion;-1"),
         },
       },
       {

@@ -30,6 +30,15 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
         $setWindowFields: { output: { totalCount: { $count: {} } } },
       },
       {
+        // take the size of the views, likes and comments array and add them to the document as a number
+        $addFields: {
+          // the fields may not exist, so we use $ifNull to return an empty array if they don't exist
+          viewsCount: { $size: { $ifNull: ["$views", []] } },
+          likesCount: { $size: { $ifNull: ["$likes", []] } },
+          commentsCount: { $size: { $ifNull: ["$comments", []] } },
+        },
+      },
+      {
         $sort: {
           ...parseSortString(req.query?.sortBy, "createdAt;-1"),
         },

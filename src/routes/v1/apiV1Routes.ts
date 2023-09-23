@@ -7,6 +7,7 @@ import blogRoutes from "./blogRoutes";
 import experienceRoutes from "./experienceRoutes";
 import utilRoutes from "./utilRoutes";
 import cloudinaryRoutes from "./cloudinaryRoutes";
+import certifacteRoutes from "./certificateRoutes";
 
 const router = express.Router();
 
@@ -19,5 +20,6 @@ router.use("/project", projectRoutes);
 router.use("/blog", blogRoutes);
 router.use("/experience", experienceRoutes);
 router.use("/util", utilRoutes);
+router.use("/certificate", certifacteRoutes);
 
 export default router;

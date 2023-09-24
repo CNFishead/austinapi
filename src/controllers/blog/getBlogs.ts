@@ -34,7 +34,6 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
         $addFields: {
           // the fields may not exist, so we use $ifNull to return an empty array if they don't exist
           viewsCount: { $size: { $ifNull: ["$views", []] } },
-          likesCount: { $size: { $ifNull: ["$likes", []] } },
           commentsCount: { $size: { $ifNull: ["$comments", []] } },
         },
       },

@@ -7,9 +7,9 @@ import { AuthenticatedRequest } from "../../types/AuthenticatedRequest";
 
 export default asyncHandler(async (req: AuthenticatedRequest, res: any, next: any) => {
   try {
-    const experiences = await Blog.find({ isPrivate: { $exists: false } });
+    const experiences = await Blog.find({ isPublished: { $exists: false } });
     for (const e of experiences) {
-      e.isPrivate = false;
+      e.isPublished = true;
       await e.save();
     }
 

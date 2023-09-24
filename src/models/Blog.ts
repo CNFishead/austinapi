@@ -16,6 +16,28 @@ const BlogSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isPublished: {
+      type: Boolean,
+      default: false,
+    },
+    publishedAt: {
+      type: Date,
+    },
+    comments: [
+      {
+        name: String,
+        email: String,
+        comment: String,
+        date: Date,
+      },
+    ],
+    views: [
+      {
+        ip: String,
+        date: Date,
+      },
+    ],
+    tags: [String],
     isPrivate: {
       type: Boolean,
       default: false,

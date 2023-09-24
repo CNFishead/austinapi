@@ -12,6 +12,6 @@ router.route("/").get(getBlogs);
 
 router.use(protect()); // protect all routes below this line
 router.route("/").post(createBlog);
-router.route("/:blogId").get(getBlog).put(updateBlog).delete(deleteBlog);
+router.route("/:id").get(getBlog).put(updateBlog).delete(deleteBlog);
 
 export default router;

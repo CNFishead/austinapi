@@ -49,6 +49,9 @@ const BlogSchema = new mongoose.Schema(
     description: {
       type: String,
     },
+    writtenAt: {
+      type: Date,
+    },
     slug: String,
   },
   { timestamps: true }

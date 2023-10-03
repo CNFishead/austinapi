@@ -9,6 +9,11 @@ const BlogSchema = new mongoose.Schema(
       required: [true, "Please add blog title"],
       trim: true,
     },
+    author: {
+      type: String,
+      required: [true, "Please add author name"],
+      trim: true,
+    },
     content: {
       type: String,
     },

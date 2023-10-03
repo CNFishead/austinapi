@@ -16,7 +16,7 @@ import Blog from "../../models/Blog";
  */
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response, next: any) => {
   try {
-    // if their is no req.body.author then set it to the current user
+    // check if the req.body has an author field, if it doesnt append one to the req.body
     if (!req.body.author) req.body.author = req.user.fullName;
     const newBlog = await Blog.create(req.body);
     if (!newBlog) return res.status(400).json({ success: false, message: "Blog was not created" });

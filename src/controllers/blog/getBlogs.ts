@@ -13,7 +13,7 @@ import parseSortString from "../../utils/parseSortString";
  *
  * @author Austin Howard
  * @version 1.0
- * @since 1.0
+ * @since 1.0.2
  * @lastUpdated
  */
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response, next: any) => {
@@ -23,7 +23,7 @@ export default asyncHandler(async (req: AuthenticatedRequest, res: Response, nex
       {
         $match: {
           $and: [{ ...parseFilterOptions(req.query?.filterOptions) }],
-          $or: [...parseQueryKeywords(["blogTitle", "slug", "description"], req.query?.keyword)],
+          $or: [...parseQueryKeywords(["blogTitle", "slug", "description", "tags", "content"], req.query?.keyword)],
         },
       },
       {

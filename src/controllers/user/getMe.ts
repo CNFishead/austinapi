@@ -16,18 +16,11 @@ import { AuthenticatedRequest } from '../../types/AuthenticatedRequest';
  */
 export default asyncHandler(async (req: AuthenticatedRequest, res: Response) => {
   try {
-    User.findById(req.user._id, async  (err: any, user: any) => {
-      if(err) {
-        return res.status(500).json({ message: "Something went wrong" });
-      }
-      if(!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-      return res.json({
-        success: true,
-        user,
-      });
-    })
+    const user = await User.findById(req.user._id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    return res.status(200).json({ user });
   } catch (error: any) {
     console.log(error);
     res.status(500).json({ message: `Something Went Wrong: ${error.message}` });   

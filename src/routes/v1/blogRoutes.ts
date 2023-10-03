@@ -5,10 +5,12 @@ import createBlog from "../../controllers/blog/createBlog";
 import getBlog from "../../controllers/blog/getBlog";
 import updateBlog from "../../controllers/blog/updateBlog";
 import deleteBlog from "../../controllers/blog/deleteBlog";
+import getBlogPublic from "../../controllers/blog/getBlogPublic";
 const router = express.Router();
 
 // Import all of our routes
 router.route("/").get(getBlogs);
+router.route("/:slug/public").get(getBlogPublic);
 
 router.use(protect()); // protect all routes below this line
 router.route("/").post(createBlog);

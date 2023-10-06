@@ -39,7 +39,34 @@ const BlogSchema = new mongoose.Schema(
     views: [
       {
         ip: String,
-        date: Date,
+        initialDate: {
+          type: Date,
+          default: Date.now,        },
+        lastViewed: Date,
+        location: {
+          country: {
+            type: String,
+          },
+          state: {
+            type: String,
+          },
+          city: {
+            type: String,
+          },
+          latitude: {
+            type: Number,
+          },
+          longitude: {
+            type: Number,
+          },
+          zipcode: {
+            type: String,
+          },
+        },
+        device: {
+          type: String,
+          enum: ["mobile", "desktop", "tablet"],
+        },
       },
     ],
     tags: [String],

@@ -10,7 +10,20 @@ export default interface BlogType {
   views: [
     {
       ip: string;
-      date: Date;
+      initialDate: Date;
+      lastViewed: Date;
+      location: {
+        country: string;
+        state: string;
+        city: string;
+        latitude: number;
+        longitude: number;
+        zipcode: string;
+      };
+      device: {
+        type: string;
+        enum: ["mobile", "desktop", "tablet"];
+      };
     }
   ];
   comments: [

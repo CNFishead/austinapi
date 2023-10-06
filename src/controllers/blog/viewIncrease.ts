@@ -14,24 +14,27 @@ interface LocationData {
 }
 
 export const viewIncrease = async (req: Request, res: Response) => {
-  const { ipAddress, deviceType } = req.body;
+  const { ip, device } = req.body;
   const { id } = req.params;
+  // regex to validate the device, we need to make sure that the device is either mobile, desktop or tablet
 
   try {
-    const locationData: LocationData = await getLocationData(ipAddress);
+    const locationData: LocationData = await getLocationData(ip);
     const blog = await Blog.findById(id);
 
     if (!blog) {
       return res.status(404).json({ message: "Blog not found" });
     }
 
-    const viewIndex = blog.views.findIndex((view) => view.ip === ipAddress);
+    const viewIndex = blog.views.findIndex((view) => view.ip === ip);
 
     if (viewIndex !== -1) {
       blog.views[viewIndex].lastViewed = new Date();
+      await blog.save();
+      return res.status(200).json({ message: "View Updated" });
     } else {
       blog.views.push({
-        ip: ipAddress,
+        ip: ip,
         initialDate: new Date(),
         lastViewed: new Date(),
         location: {
@@ -42,7 +45,7 @@ export const viewIncrease = async (req: Request, res: Response) => {
           longitude: locationData.longitude,
           zipcode: locationData.zipcode,
         },
-        device: deviceType,
+        device: device ?? "Unknown",
       });
     }
 

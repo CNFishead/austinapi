@@ -19,39 +19,48 @@ export const viewIncrease = async (req: Request, res: Response) => {
   // regex to validate the device, we need to make sure that the device is either mobile, desktop or tablet
 
   try {
-    const locationData: LocationData = await getLocationData(ip);
-    const blog = await Blog.findById(id);
+    // regex to check if the ip is formatted correctly, i.e. xxx.xxx.xxx.xxx
+    const ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+    // check the ip to see if its formatted correctly
+    // next we want to split the ip by "." and check each segments number value to check if its out of range
+    const ipSegments = req.body.ip.split(".");
+    const isValidIp = ipSegments.every((segment: any) => segment >= 0 && segment <= 255 && !isNaN(segment));
+    if (ipRegex.test(req.body.ip) && isValidIp) {
+      const locationData: LocationData = await getLocationData(ip);
+      const blog = await Blog.findById(id);
 
-    if (!blog) {
-      return res.status(404).json({ message: "Blog not found" });
-    }
+      if (!blog) {
+        return res.status(404).json({ message: "Blog not found" });
+      }
 
-    const viewIndex = blog.views.findIndex((view) => view.ip === ip);
+      const viewIndex = blog.views.findIndex((view) => view.ip === ip);
 
-    if (viewIndex !== -1) {
-      blog.views[viewIndex].lastViewed = new Date();
+      if (viewIndex !== -1) {
+        blog.views[viewIndex].lastViewed = new Date();
+        await blog.save();
+        return res.status(200).json({ message: "View Updated" });
+      } else {
+        blog.views.push({
+          ip: ip,
+          initialDate: new Date(),
+          lastViewed: new Date(),
+          location: {
+            city: locationData.city,
+            state: locationData.state,
+            country: locationData.country,
+            latitude: locationData.latitude,
+            longitude: locationData.longitude,
+            zipcode: locationData.zipcode,
+          },
+          device: device ?? "Unknown",
+        });
+      }
+
       await blog.save();
-      return res.status(200).json({ message: "View Updated" });
-    } else {
-      blog.views.push({
-        ip: ip,
-        initialDate: new Date(),
-        lastViewed: new Date(),
-        location: {
-          city: locationData.city,
-          state: locationData.state,
-          country: locationData.country,
-          latitude: locationData.latitude,
-          longitude: locationData.longitude,
-          zipcode: locationData.zipcode,
-        },
-        device: device ?? "Unknown",
-      });
+
+      return res.status(200).json({ message: "View increased successfully" });
     }
-
-    await blog.save();
-
-    res.status(200).json({ message: "View increased successfully" });
+    return res.status(400).json({ message: "Invalid IP address" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server error" });

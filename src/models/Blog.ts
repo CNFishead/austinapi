@@ -28,20 +28,13 @@ const BlogSchema = new mongoose.Schema(
     publishedAt: {
       type: Date,
     },
-    comments: [
-      {
-        name: String,
-        email: String,
-        comment: String,
-        date: Date,
-      },
-    ],
     views: [
       {
         ip: String,
         initialDate: {
           type: Date,
-          default: Date.now,        },
+          default: Date.now,
+        },
         lastViewed: Date,
         location: {
           country: {

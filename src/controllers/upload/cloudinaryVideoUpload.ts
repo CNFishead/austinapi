@@ -40,16 +40,7 @@ export default asyncHandler(
         return res
           .status(400)
           .json({ message: `Please make sure to upload a video` });
-      }
-      if (file.size > process.env.MAX_FILE_UPLOAD!) {
-        return res.status(400).json({
-          message: `File was too large size: ${formatBytes(
-            file.size
-          )}, please upload a video less than ${
-            process.env.MAX_FILE_UPLOAD
-          } or 10MB in size`,
-        });
-      }
+      } 
       const fileName = path.parse(file.name.toString());
 
       // convert the file.data to buffer and create a readstream

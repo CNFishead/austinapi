@@ -20,15 +20,15 @@ export default asyncHandler(
           message: 'Cloudinary API is not responding',
         });
       // get all images from cloudinary
-      const images = await cloudinary.api.resources({
-        resource_type: 'image', // all images and videos
+      const videos = await cloudinary.api.resources({
+        resource_type: 'video',
         next_cursor: req.query?.nextCursor,
         max_results: req.query?.maxResults,
       });
 
       return res.status(200).json({
         success: true,
-        data: images,
+        data: videos,
       });
     } catch (err) {
       console.log(err);

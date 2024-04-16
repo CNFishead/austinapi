@@ -1,21 +1,28 @@
-import mongoose from "mongoose";
-import slugify from "slugify";
-import BlogType from "../types/BlogType";
+import mongoose from 'mongoose';
+import slugify from 'slugify';
+import BlogType from '../types/BlogType';
 
 const BlogSchema = new mongoose.Schema(
   {
     blogTitle: {
       type: String,
-      required: [true, "Please add blog title"],
+      required: [true, 'Please add blog title'],
       trim: true,
     },
     author: {
       type: String,
-      required: [true, "Please add author name"],
+      required: [true, 'Please add author name'],
       trim: true,
     },
     content: {
       type: String,
+    },
+    videoUrl: {
+      type: String,
+    },
+    isVlog: {
+      type: Boolean,
+      default: false,
     },
     isFeatured: {
       type: Boolean,
@@ -58,7 +65,7 @@ const BlogSchema = new mongoose.Schema(
         },
         device: {
           type: String,
-          enum: ["mobile", "desktop", "tablet"],
+          enum: ['mobile', 'desktop', 'tablet'],
         },
       },
     ],
@@ -69,7 +76,7 @@ const BlogSchema = new mongoose.Schema(
     },
     blogImageUrl: {
       type: String,
-      default: "/images/no-photo.jpg",
+      default: '/images/no-photo.jpg',
     },
     description: {
       type: String,
@@ -83,9 +90,9 @@ const BlogSchema = new mongoose.Schema(
 );
 
 // Create project slug from the name
-BlogSchema.pre("save", function (next) {
+BlogSchema.pre('save', function (next) {
   this.slug = slugify(this.blogTitle, { lower: true });
   next();
 });
 
-export default mongoose.model<BlogType>("Blog", BlogSchema);
+export default mongoose.model<BlogType>('Blog', BlogSchema);

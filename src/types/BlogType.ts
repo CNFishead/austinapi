@@ -6,6 +6,8 @@ export default interface BlogType {
   isFeatured: boolean;
   isPrivate: boolean;
   isPublished: boolean;
+  isVlog: boolean;
+  videoUrl: string;
   publishedAt: Date;
   views: [
     {
@@ -35,6 +37,7 @@ export default interface BlogType {
   ];
   blogImageUrl: string;
   description: string;
+  writtenAt: Date;
   slug: string;
   tags: [string];
   createdAt: Date;

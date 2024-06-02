@@ -87,7 +87,7 @@ const BlogSchema = new mongoose.Schema(
     slug: String,
   },
   { timestamps: true }
-);
+) as mongoose.Schema<BlogType>;
 
 // Create project slug from the name
 BlogSchema.pre('save', function (next) {

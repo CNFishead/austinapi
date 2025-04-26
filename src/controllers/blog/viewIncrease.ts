@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { Request, Response } from 'express';
 import Blog from '../../models/Blog';
+import ViewSchema from '../../models/ViewSchema';
 
 const IP_GEOLOCATION_API_KEY = 'YOUR_API_KEY';
 
@@ -12,12 +13,10 @@ interface LocationData {
   latitude: number;
   longitude: number;
 }
+const isBot = (ua: string): boolean =>
+  /bot|crawl|spider|slurp|facebook|whatsapp|preview|headless/i.test(ua);
 
 export const viewIncrease = async (req: Request, res: Response) => {
-  const { ip, device } = req.body;
-  const { id } = req.params;
-  // regex to validate the device, we need to make sure that the device is either mobile, desktop or tablet
-
   try {
     // regex to check if the ip is formatted correctly, i.e. xxx.xxx.xxx.xxx
     const ipRegex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
@@ -27,38 +26,33 @@ export const viewIncrease = async (req: Request, res: Response) => {
     const isValidIp = ipSegments.every(
       (segment: any) => segment >= 0 && segment <= 255 && !isNaN(segment)
     );
+    const userAgent = req.headers['user-agent'] || '';
     if (ipRegex.test(req.body.ip) && isValidIp) {
-      const locationData: LocationData = await getLocationData(ip);
-      const blog = await Blog.findById(id);
-
-      if (!blog) {
-        return res.status(404).json({ message: 'Blog not found' });
+      // ⛔ Skip bots
+      if (isBot(userAgent)) {
+        return res.status(200).json({ success: true, message: 'Skipped bot' });
       }
 
-      const viewIndex = blog.views.findIndex((view: any) => view.ip === ip);
-
-      if (viewIndex !== -1) {
-        blog.views[viewIndex].lastViewed = new Date();
-        await blog.save();
-        return res.status(200).json({ message: 'View Updated' });
-      } else {
-        blog.views.push({
-          ip: ip,
-          initialDate: new Date(),
-          lastViewed: new Date(),
-          location: {
-            city: locationData.city,
-            state: locationData.state,
-            country: locationData.country,
-            latitude: locationData.latitude,
-            longitude: locationData.longitude,
-            zipcode: locationData.zipcode,
+      const now = new Date();
+      let location = {} as LocationData;
+      const { ip, device } = req.body;
+      const { id } = req.params;
+      location = await getLocationData(ip);
+      const result = await ViewSchema.findOneAndUpdate(
+        { blog: id, ip },
+        {
+          $set: {
+            device,
+            lastViewedAt: now,
+            location,
           },
-          device: device ?? 'Unknown',
-        });
-      }
-
-      await blog.save();
+        },
+        {
+          new: true,
+          upsert: true,
+          setDefaultsOnInsert: true,
+        }
+      );
 
       return res.status(200).json({ message: 'View increased successfully' });
     }

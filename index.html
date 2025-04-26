@@ -1,0 +1,58 @@
+<div id="checkout_button">Check Out</div>
+<script
+  src="https://pyreprocessing.transactiongateway.com/token/CollectCheckout.js"
+  data-checkout-key="checkout_public_jDTMx8paZRTazmzeNvD8WS8cgrwnq6Vu"
+></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function (e) {
+    document
+      .getElementById('checkout_button')
+      .addEventListener('click', function (e) {
+        CollectCheckout.redirectToCheckout({
+          type: 'sale',
+          lineItems: [
+            {
+              lineItemType: 'customPayment',
+              description: 'Donation Amount',
+              currency: 'USD',
+            },
+          ],
+          successUrl: null,
+          cancelUrl: null,
+          receipt: {
+            showReceipt: true,
+            sendToCustomer: true,
+          },
+          collectShippingInfo: true,
+          useKount: false,
+          promptRecurringPayment: true,
+          paymentMethods: [
+            {
+              type: 'creditCard',
+              use3DSecure: false,
+            },
+            {
+              type: 'check',
+            },
+          ],
+          fields: [],
+        }).then((error) => {
+          console.log(error);
+        });
+      });
+  });
+</script>
+<style>
+  #checkout_button {
+    display: inline-block;
+    font-family: sans-serif;
+    font-size: 20px;
+    background-color: #0bd992;
+    color: white;
+    border-radius: 4px;
+    padding: 14px 28px;
+  }
+  #checkout_button:hover {
+    cursor: pointer;
+  }
+</style>

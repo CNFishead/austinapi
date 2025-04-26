@@ -21,22 +21,23 @@ export default (array: string[], key: string) => {
 
   // each value in the array needs to be returned as an object: [{ key: { $regex: value, $options: 'i' } }, { key: { $regex: value, $options: 'i' } }}]
   array.forEach((value) => {
-    if (value.includes("[") && value.includes("]")) {
-      const [fieldName, subField] = value.split(".");
+    if (value.includes('[') && value.includes(']')) {
+      const [fieldName, subField] = value.split('.');
       // remove the square brackets from the fieldName
-      const elemMatchField = fieldName.replace("[", "");
+      const elemMatchField = fieldName.replace('[', '');
       // remove the square brackets from the subField
-      const subFieldFinal = subField.replace("]", "");
+      const subFieldFinal = subField.replace(']', '');
       parsed.push({
         [elemMatchField]: {
-          $elemMatch: { [subFieldFinal]: { $regex: key.trim(), $options: "i" } },
+          $elemMatch: {
+            [subFieldFinal]: { $regex: key.trim(), $options: 'i' },
+          },
         },
       });
     } else {
-      parsed.push({ [value]: { $regex: key.trim(), $options: "i" } });
+      parsed.push({ [value]: { $regex: key.trim(), $options: 'i' } });
     }
   });
 
-  console.log(parsed);
   return parsed;
 };

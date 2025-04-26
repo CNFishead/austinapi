@@ -33,10 +33,16 @@ export default asyncHandler(
           },
         },
         {
-          // take the size of the views, likes and comments array and add them to the document as a number
+          $lookup: {
+            from: 'views',
+            localField: '_id',
+            foreignField: 'blog',
+            as: 'views',
+          },
+        },
+        {
           $addFields: {
-            // the fields may not exist, so we use $ifNull to return an empty array if they don't exist
-            viewsCount: { $size: { $ifNull: ['$views', []] } },
+            viewsCount: { $size: '$views' },
           },
         },
         {
@@ -58,10 +64,16 @@ export default asyncHandler(
         return res
           .status(404)
           .json({ success: false, message: 'No blog found' });
-      // return the blog 
-      return res
-        .status(200)
-        .json({ success: true, data: encryptData(JSON.stringify(blog)) });
+      if (blog.isPrivate) {
+        blog.content = null;
+      }
+      // return the blog
+      return res.status(200).json({
+        success: true,
+        payload: {
+          ...blog,
+        },
+      });
     } catch (err) {
       console.log(err);
       error(err, req, res, next);

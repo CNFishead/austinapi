@@ -33,13 +33,24 @@ export default asyncHandler(
           },
         },
         {
+          $lookup: {
+            from: 'views',
+            localField: '_id',
+            foreignField: 'blog',
+            as: 'views',
+          },
+        },
+        {
+          $addFields: {
+            viewsCount: { $size: '$views' },
+          },
+        },
+        {
           $setWindowFields: { output: { totalCount: { $count: {} } } },
         },
         {
           // take the size of the views, likes and comments array and add them to the document as a number
-          $addFields: {
-            // the fields may not exist, so we use $ifNull to return an empty array if they don't exist
-            viewsCount: { $size: { $ifNull: ['$views', []] } },
+          $addFields: { 
             commentsCount: { $size: { $ifNull: ['$comments', []] } },
           },
         },

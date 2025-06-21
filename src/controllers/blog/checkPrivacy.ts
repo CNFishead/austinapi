@@ -19,7 +19,6 @@ import User from '../../models/User';
 export default asyncHandler(async (req: any, res: any) => {
   try {
     const { password } = req.body;
-    console.log(req.body);
     //This checks if user isActive
     const user = await User.findOne({
       // finds the first instance of an admin user, should only be one.

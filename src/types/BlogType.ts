@@ -1,6 +1,9 @@
+import { ObjectId } from 'mongoose';
+
 export default interface BlogType {
   _id: string;
   blogTitle: string;
+  user: ObjectId;
   author: string;
   content: string;
   isFeatured: boolean;
@@ -24,7 +27,7 @@ export default interface BlogType {
       };
       device: {
         type: string;
-        enum: ["mobile", "desktop", "tablet"];
+        enum: ['mobile', 'desktop', 'tablet'];
       };
     }
   ];

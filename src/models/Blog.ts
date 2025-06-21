@@ -9,6 +9,10 @@ const BlogSchema = new mongoose.Schema(
       required: [true, 'Please add blog title'],
       trim: true,
     },
+    user: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+    },
     author: {
       type: String,
       required: [true, 'Please add author name'],
